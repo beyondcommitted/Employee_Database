@@ -111,14 +111,13 @@ const viewEmployees = () => {
         connection.end();
     })
     
-
 }
 
 async function addDepartment() {
     try {
-  const {dept_name} = await inquirer.prompt([
+  const {name} = await inquirer.prompt([
     {
-      name: "dept_name",
+      name: "name",
       message: "What is the name of the department you would like to add?",
       type: "input",
       },   
@@ -126,7 +125,7 @@ async function addDepartment() {
 
   // insert the item into our database
    const deptData = await connection.query("INSERT INTO department SET ?", {
-    dept_name: dept_name,
+    name: name,
   });
   console.log(deptData + "Inserted Successfully");
 } catch (error) {
@@ -171,5 +170,68 @@ const viewDepartments = () => {
         connection.end();
     })
     
+ }
+async function addRole() {
+    try {
+  const {title, salary} = await inquirer.prompt([
+    {
+      name: "title",
+      message: "What is the title you would like to add?",
+      type: "input",
+      },   
+    {
+      name: "salary",
+      message: "What is the salary you would like to add?",
+      type: "input",
+      },   
+])
 
+  // insert the item into our database
+   const roleData = await connection.query("INSERT INTO emp_role SET ?", {
+    title: title,
+    salary: salary,
+  });
+  console.log(roleData + "Inserted Successfully");
+} catch (error) {
+    console.log("Try again!")
+}
+  init();
+}
+
+const deleteRole = () => {
+  console.log("Role being deleted");
+
+  connection.query("SELECT * FROM emp_role", (error, response) => {
+    if (error) throw error;
+    console.table(response)
+    const selectRole = [
+        ...response.map(emp_role => ({value: emp_role.id, name: emp_role.title + ' ' + emp_role.salary}))
+    ]
+ inquirer.prompt([{
+     type: "list",
+     message: " Which Role would you like to remove?",
+     name: "delete",
+     choices: selectRole,
+ }])
+ .then(roleAnswers => {
+     connection.query(
+    "DELETE FROM emp_role WHERE id =" + roleAnswers.delete,
+    (error, response) => {
+      if (error) throw error;
+      console.log(`${response.roleData} department deleted!\n`);
+      viewRoles();
+    }
+  );
+ })
+})
+  
+};
+
+const viewRoles = () => {
+    connection.query("SELECT * FROM emp_role", (error, response) => {
+        if (error) throw error;
+        console.table(response)
+        connection.end();
+    })
+    
  }
