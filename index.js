@@ -4,23 +4,41 @@ const inquirer = require("inquirer");
 init();
 
 async function init() {
-  const addOrDelete  = await inquirer.prompt({
-    name: "addEmployee",
+  const manageData  = await inquirer.prompt({
+    name: "selectTask",
     type: "list",
-    message: "Would you like to [ADD] or [DELETE] an employee?",
-    choices: ["ADD", "DELETE", "VIEW", "EXIT"],
+    message: "Select a task that you would like to complete.",
+    choices: ["Add Employee", "Delete Employee", "View Employees", "Add Department", "Delete Department",  "View Departments", "Add Role", "Delete Role", "View Roles", "EXIT"],
   });
 
-  switch (addOrDelete.addEmployee) {
-    case "ADD":
+  switch (manageData.selectTask) {
+    case "Add Employee":
       // Post an item
       addEmployee();
       break;
-    case "DELETE":
+    case "Delete Employee":
       deleteEmployee();
       break;
-    case "VIEW":
+    case "View Employees":
       viewEmployees();
+    break;
+    case "Add Department":
+      addDepartment();
+      break;
+    case "Delete Department":
+      deleteDepartment();
+    break;
+    case "View Departments":
+      viewDepartments();
+    break;
+    case "Add Role":
+      addRole();
+    break;
+    case "Delete Role":
+      deleteRole();
+    break;
+    case "View Roles":
+      viewRoles();
     break;
     default:
       process.exit(0);
@@ -41,22 +59,16 @@ async function addEmployee() {
       name: "last_name",
       message: "What is the last name of the employee you would like to add?",
       type: "input",
-    //   validate(last_name) {
-    //     if (last_name === "undefined") {
-    //       return false;
-    //     } else {
-    //     return "Please insert a last name";
-    // }
       },
     
 ])
 
   // insert the item into our database
-  const data = await connection.query("INSERT INTO employees SET ?", {
+  const empData = await connection.query("INSERT INTO employees SET ?", {
     first_name: first_name,
     last_name: last_name,
   });
-  console.log(data + "Insertred Successfully");
+  console.log(empData + "Inserted Successfully");
 } catch (error) {
     console.log("Try again!")
 }
@@ -70,7 +82,7 @@ const deleteEmployee = () => {
     if (error) throw error;
     console.table(response)
     const selectEmployee = [
-        ...response.map(employee => ({value: employee.id, name: employee.first_name + ' ' + employee.last_name}))
+        ...response.map(employees => ({value: employees.id, name: employees.first_name + ' ' + employees.last_name}))
     ]
  inquirer.prompt([{
      type: "list",
@@ -78,12 +90,12 @@ const deleteEmployee = () => {
      name: "delete",
      choices: selectEmployee,
  }])
- .then(answers => {
+ .then(empAnswers => {
      connection.query(
-    "DELETE FROM employees WHERE id =" + answers.delete,
+    "DELETE FROM employees WHERE id =" + empAnswers.delete,
     (error, response) => {
       if (error) throw error;
-      console.log(`${response.data} products deleted!\n`);
+      console.log(`${response.empData} products deleted!\n`);
       viewEmployees();
     }
   );
@@ -101,3 +113,63 @@ const viewEmployees = () => {
     
 
 }
+
+async function addDepartment() {
+    try {
+  const {dept_name} = await inquirer.prompt([
+    {
+      name: "dept_name",
+      message: "What is the name of the department you would like to add?",
+      type: "input",
+      },   
+])
+
+  // insert the item into our database
+   const deptData = await connection.query("INSERT INTO department SET ?", {
+    dept_name: dept_name,
+  });
+  console.log(deptData + "Inserted Successfully");
+} catch (error) {
+    console.log("Try again!")
+}
+  init();
+}
+
+const deleteDepartment = () => {
+  console.log("Department being deleted");
+
+  connection.query("SELECT * FROM department", (error, response) => {
+    if (error) throw error;
+    console.table(response)
+    const selectDepartment = [
+        ...response.map(department => ({value: department.id, name: department.dept_name}))
+    ]
+ inquirer.prompt([{
+     type: "list",
+     message: " Which department would you like to remove?",
+     name: "delete",
+     choices: selectDepartment,
+ }])
+ .then(deptAnswers => {
+     connection.query(
+    "DELETE FROM department WHERE id =" + deptAnswers.delete,
+    (error, response) => {
+      if (error) throw error;
+      console.log(`${response.deptData} department deleted!\n`);
+      viewDepartments();
+    }
+  );
+ })
+})
+  
+};
+
+const viewDepartments = () => {
+    connection.query("SELECT * FROM department", (error, response) => {
+        if (error) throw error;
+        console.table(response)
+        connection.end();
+    })
+    
+
+ }
