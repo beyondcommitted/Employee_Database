@@ -115,9 +115,9 @@ const viewEmployees = () => {
 
 async function addDepartment() {
     try {
-  const {name} = await inquirer.prompt([
+  const {dept_name} = await inquirer.prompt([
     {
-      name: "name",
+      name: "dept_name",
       message: "What is the name of the department you would like to add?",
       type: "input",
       },   
@@ -125,7 +125,7 @@ async function addDepartment() {
 
   // insert the item into our database
    const deptData = await connection.query("INSERT INTO department SET ?", {
-    name: name,
+    dept_name: dept_name,
   });
   console.log(deptData + "Inserted Successfully");
 } catch (error) {
