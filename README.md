@@ -7,8 +7,8 @@ I want to be able to view and manage the departments, roles, and employees in my
 So that I can organize and plan my business
 ```
 Below are the needed links to view application:<br>
-https://github.com/beyondcommitted/Employee_Database <br>
-https://youtu.be/uMYVn37mRog<br>
+## [Github](https://github.com/beyondcommitted/Employee_Database) <br>
+## [Walk-through Video](https://youtu.be/uMYVn37mRog)<br>
 
 
 ## Met Acceptance Criteria
@@ -33,6 +33,5 @@ WHEN user chooses to exit user is no longer prompted to choose a task
 
 ## Mock Up
 
-![Employee Database](db\assets\images\tableIllustrations.png)
-![Employee Database](db\assets\images\tableData.png)
-![Employee Database](db\assets\images\tableIllustrations.png)
+![Tables](https://github.com/beyondcommitted/Employee_Database/blob/main/db/assets/images/tableIllustrations.png?raw=true)
+![Employee Database](https://github.com/beyondcommitted/Employee_Database/blob/main/db/assets/images/tableData.png?raw=true)
